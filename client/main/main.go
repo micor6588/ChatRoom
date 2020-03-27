@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ChatRoom/client/process"
 	"fmt"
 	"os"
 )
@@ -24,10 +25,20 @@ func main() {
 		switch key {
 		case 1:
 			fmt.Println("登陆聊天室")
-			loop = false
+			//说明用户要登陆
+			fmt.Println("请输入用户的ID")
+			fmt.Scanf("%d\n", &userID)
+			fmt.Println("请输入您的用户密码：")
+			fmt.Scanf("%s\n", &userPwd)
+
+			//完成登录
+			//1.创建一个UserProcess结构体
+			up := &process.UserProcess{}
+			up.Login(userID, userPwd)
+			//loop = false
 		case 2:
 			fmt.Println("注册用户")
-			loop = false
+			//loop = false
 		case 3:
 			fmt.Println("退出聊天室")
 			//loop = false
@@ -36,6 +47,10 @@ func main() {
 			fmt.Println("您的输入有误，请重新输入")
 		}
 	}
+
+}
+
+/*
 	//依据用户的输入，显示新的信息
 	if key == 1 {
 		//说明用户要登陆
@@ -45,14 +60,17 @@ func main() {
 		fmt.Scanf("%s\n", &userPwd)
 
 		//先把登录的函数，写到另外一个文件，比如login.go
-		login(userID, userPwd)
+		//这里我们会重新调用
+		//login(userID, userPwd)
 		// if err != nil {
 		// 	fmt.Println("登陆失败")
 		// } else {
 		// 	fmt.Println("登陆成功")
 		// }
+
+		//因为使用了新的结构
+
 	} else if key == 2 {
 		fmt.Println("进行用户注册的逻辑")
 	}
-
-}
+*/

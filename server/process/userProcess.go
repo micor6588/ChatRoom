@@ -1,3 +1,4 @@
+// 处理用户相关业务逻辑，比如登录，注册等...
 package process2
 
 import (
