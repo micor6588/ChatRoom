@@ -1,15 +1,48 @@
 package main
 
 import (
-	"ChatRoom/common/message"
-	"encoding/binary"
-	"encoding/json"
 	_ "errors"
 	"fmt"
-	"io"
 	"net"
 )
 
+//处理和客户端之间的通讯
+func process(conn net.Conn) {
+	//这里延时关闭conn
+	defer conn.Close()
+	//这里创建一个总控的实例
+	processor := &Processor{
+		Conn: conn,
+	}
+	err := processor.process2()
+	if err != nil {
+		fmt.Println("客户端和服务器之间的协程出问题,err", err)
+		return
+	}
+}
+
+func main() {
+	//提示信息
+	fmt.Println("服务器监听8687端口")
+	listen, err := net.Listen("tcp", "127.0.0.1:8687")
+	if err != nil {
+		fmt.Println("net listen faild err=", err)
+		return
+	}
+	defer listen.Close()
+	//一旦监听成功，就等待客户端连接服务器
+	for {
+		fmt.Println("等待客户端连接服务器......")
+		conn, err := listen.Accept()
+		if err != nil {
+			fmt.Println("net listen faild err=", err)
+			return
+		}
+		go process(conn)
+	}
+}
+
+/*
 // ReadPackage 读取客户端发过来的数据
 func ReadPackage(conn net.Conn) (mes message.Message, err error) {
 	buf := make([]byte, 8096)
@@ -119,52 +152,4 @@ func ServerProcessMessage(conn net.Conn, mes *message.Message) (err error) {
 	}
 	return
 }
-
-//处理和客户端之间的通讯
-func process(conn net.Conn) {
-	//这里延时关闭conn
-	defer conn.Close()
-	//循环读取客户端发送的消息
-	for {
-		//这里我们将读取数据包，直接封装成一个函数ReadPackage,返回一个（Message,error）
-		fmt.Println("读取客户端发送的消息数据")
-		mes, err := ReadPackage(conn)
-		if err != nil {
-			if err == io.EOF {
-				fmt.Println("客户端退出了，服务器也退出")
-				return
-			} else {
-				fmt.Println("read package faild err=", err)
-				return
-			}
-		}
-		err = ServerProcessMessage(conn, &mes)
-		if err != nil {
-			return
-		}
-		//输出消息的内容
-		fmt.Println("mes=", mes)
-	}
-
-}
-
-func main() {
-	//提示信息
-	fmt.Println("服务器监听8687端口")
-	listen, err := net.Listen("tcp", "127.0.0.1:8687")
-	if err != nil {
-		fmt.Println("net listen faild err=", err)
-		return
-	}
-	defer listen.Close()
-	//一旦监听成功，就等待客户端连接服务器
-	for {
-		fmt.Println("等待客户端连接服务器......")
-		conn, err := listen.Accept()
-		if err != nil {
-			fmt.Println("net listen faild err=", err)
-			return
-		}
-		go process(conn)
-	}
-}
+*/
