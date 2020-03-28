@@ -1,9 +1,11 @@
 package main
 
 import (
+	"ChatRoom/server/model"
 	_ "errors"
 	"fmt"
 	"net"
+	"time"
 )
 
 //处理和客户端之间的通讯
@@ -21,7 +23,17 @@ func process(conn net.Conn) {
 	}
 }
 
+//这里我们编写一个函数完成对UserDao的初始化任务
+func initUserDao() {
+	//这里需要注意初始化顺序的问题
+	//initPool,在initUserDao
+	model.MyUserDao = model.NewUserDao(pool) //这里的pool是已经在redis.go里面定义的全局变量pool
+}
+
 func main() {
+	//当服务器启动时，我们就初始化连接池
+	initPool("127.0.0.1:6379", 16, 0, 300*time.Second)
+	initUserDao()
 	//提示信息
 	fmt.Println("服务器监听8687端口")
 	listen, err := net.Listen("tcp", "127.0.0.1:8687")

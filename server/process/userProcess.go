@@ -3,6 +3,7 @@ package process2
 
 import (
 	"ChatRoom/common/message"
+	"ChatRoom/server/model"
 	"ChatRoom/server/utils"
 	"encoding/json"
 	"fmt"
@@ -31,15 +32,29 @@ func (pro *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 	//2.再声明一个LoginResMes,并完成赋值
 	var loginResMes message.LoginResponMessage
 	//先将登录验证写死，之后改写为数据库验证
-	//如股用户id=100,密码等于abcdef，就认定为合法
-	if loginMessage.UserID == 100 && loginMessage.UserPwd == "abcdef" {
-		//合法
-		loginResMes.Code = 200
-	} else {
+	//使用model.MyUserDao到redis验证
+	user, err := model.MyUserDao.LoginVerify(loginMessage.UserID, loginMessage.UserPwd)
+	if err != nil {
 		//不合法
 		loginResMes.Code = 500
 		loginResMes.Error = "该用户不存在请注册之后再使用"
+		//我们在这里先测试成功，然后再返回具体的错误信息
+	} else {
+		loginResMes.Code = 200
+		fmt.Println(user, "登录成功了")
 	}
+
+	/*
+		//如股用户id=100,密码等于abcdef，就认定为合法
+		if loginMessage.UserID == 100 && loginMessage.UserPwd == "abcdef" {
+			//合法
+			loginResMes.Code = 200
+		} else {
+			//不合法
+			loginResMes.Code = 500
+			loginResMes.Error = "该用户不存在请注册之后再使用"
+		}
+	*/
 	//3.将loginResMes进行序列化
 	data, err := json.Marshal(loginResMes)
 	if err != nil {

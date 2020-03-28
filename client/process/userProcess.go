@@ -65,7 +65,7 @@ func (pro *UserProcess) Login(userID int, userPwd string) (err error) {
 		fmt.Println("conn write(bytes) err=", err)
 		return
 	}
-	//fmt.Printf("客户端发送的消息内容为:%s", string(data))
+	fmt.Printf("客户端发送的消息长度为:%d,消息内容为:%s", len(data), string(data))
 	//发送消息本身
 	_, err = conn.Write(data)
 	if err != nil {

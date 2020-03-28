@@ -20,6 +20,7 @@ func (tran *Transfer) ReadPackage() (mes message.Message, err error) {
 	// buf := make([]byte, 8096)
 	//conn.Read 在conn没有被关闭的情况下，才会阻塞
 	//如果客户端关闭了connm,就不会阻塞
+	fmt.Println("读取客户端发送的数据......")
 	_, err = tran.Conn.Read(tran.Buf[:4])
 	if err != nil {
 		// fmt.Println("conn read datd faild,err=", err)
