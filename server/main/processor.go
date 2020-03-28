@@ -27,6 +27,10 @@ func (pro *Processor) ServerProcessMessage(mes *message.Message) (err error) {
 		err = up.ServerProcessLogin(mes)
 	case message.RegisterMesssageType:
 		//处理注册的逻辑
+		up := &process2.UserProcess{
+			Conn: pro.Conn,
+		}
+		err = up.ServerProcessRegist(mes)
 	default:
 		fmt.Println("请正确输入消息类型，消息类型不存在，无法处理")
 	}

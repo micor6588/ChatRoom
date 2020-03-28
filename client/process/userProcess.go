@@ -7,11 +7,80 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
+	"os"
 )
 
 // UserProcess 给关联一个用户登录的结构体
 type UserProcess struct {
 	//暂时不需要任何字段
+}
+
+// Regist 写一个函数，完成登录功能
+func (pro *UserProcess) Regist(userID int, userPwd string, userName string) (err error) {
+	//下一个就要开始定协议
+	fmt.Printf(" useID=%d  userPwd=%s userName=%s\n", userID, userPwd, userName)
+	//1.链接到服务器
+	conn, err := net.Dial("tcp", "127.0.0.1:8687")
+	if err != nil {
+		fmt.Println("net.Dtal faild err=", err)
+		return
+	}
+	//延时关闭
+	defer conn.Close()
+	//2.准备通过conn发消息给服务器
+	var mes message.Message
+	mes.MessageType = message.RegisterMesssageType
+	//3.创建一个LoginMeaage结构体
+	var registMessage message.RegisterMesssages
+	registMessage.User.UserID = userID
+	registMessage.User.UserPwd = userPwd
+	registMessage.User.UserName = userName
+
+	//4.将registMessage序列化
+	data, err := json.Marshal(registMessage)
+	if err != nil {
+		fmt.Println("loginmessage json Marshar faild err=", err)
+		return
+	}
+	//5.把data赋值给mes.MessageData字段
+	mes.MessageData = string(data)
+	//6.将mes进行序列化操作
+	data, err = json.Marshal(mes)
+	if err != nil {
+		fmt.Println("mes json Marshar faild err=", err)
+		return
+	}
+
+	//这里还需要处理服务器返回的消息
+	//创建一个TranSfer实例
+	tf := &utils.Transfer{
+		Conn: conn,
+	}
+	//发送data给服务器
+	err = tf.WritePackage(data)
+	if err != nil {
+		fmt.Println("注册信息发送失败，Package (conn) faild err=", err)
+		return
+	}
+	mes, err = tf.ReadPackage()
+	if err != nil {
+		fmt.Println("ReadPackage (conn) faild err=", err)
+		return
+	}
+
+	//进行解包
+	//将mes的Data部分进行反序列化
+	var registResMes message.RegisterResMessage
+	err = json.Unmarshal([]byte(mes.MessageData), &registResMes)
+	if registResMes.Code == 200 {
+		fmt.Println("恭喜您，注册成功了")
+		os.Exit(0)
+
+	} else {
+		fmt.Println("注册失败了", registResMes.Error)
+		os.Exit(0)
+	}
+	return
 }
 
 // Login 写一个函数，完成登录功能

@@ -5,6 +5,7 @@ const (
 	LoginMessageType         = "LoginMessage"
 	LoginResponceMessageType = "LoginResponMessage"
 	RegisterMesssageType     = "RegisterMesssage"
+	RegisterResMessageType   = "RegisterResMessage"
 )
 
 // Message 定义消息结构体
@@ -26,6 +27,10 @@ type LoginResponMessage struct {
 	Code    int    `json:"code"` //返回状态码 500 表示用户未注册200表示登陆成功
 	UsersID []int  //添加字段，保存用户id的切片
 	Error   string `json:"error"` //返回错误信息
+}
+
+type RegisterMesssages struct {
+	User User `json:"user"` //类型就是User结构体
 }
 
 // RegisterResMessage 定义用户注册反馈信息结构体

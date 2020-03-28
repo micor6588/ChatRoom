@@ -6,8 +6,9 @@ import (
 	"os"
 )
 
-var userID int     //用户的账号
-var userPwd string //用户密码
+var userID int      //用户的账号
+var userPwd string  //用户密码
+var userName string //用户名
 
 func main() {
 	//接收用户选择
@@ -38,6 +39,17 @@ func main() {
 			//loop = false
 		case 2:
 			fmt.Println("注册用户")
+			fmt.Println("请输入新用户的ID")
+			fmt.Scanf("%d\n", &userID)
+			fmt.Println("请输入您设置用户的密码：")
+			fmt.Scanf("%s\n", &userPwd)
+			fmt.Println("请输入您设置用户的名字（nickName）：")
+			fmt.Scanf("%s\n", &userName)
+			//完成登录
+			//1.创建一个UserProcess结构体
+			//调用UserProcess.go里面的Regist函数完成注册
+			up := &process.UserProcess{}
+			up.Regist(userID, userPwd, userName)
 			//loop = false
 		case 3:
 			fmt.Println("退出聊天室")
