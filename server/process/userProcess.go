@@ -1,4 +1,4 @@
-// 处理用户相关业务逻辑，比如登录，注册等...
+// process2 处理用户相关业务逻辑，比如登录，注册等...
 package process2
 
 import (
@@ -13,7 +13,8 @@ import (
 // UserProcess 将方法关联到结构体当中
 type UserProcess struct {
 	//思考：需要哪些字段。主要考虑到自己关联的方法需要哪些字段
-	Conn net.Conn
+	Conn   net.Conn
+	UserID int //表示该Conn是哪个用户
 }
 
 // ServerProcessRegist 编写一个ServerProcessRegist
@@ -96,6 +97,15 @@ func (pro *UserProcess) ServerProcessLogin(mes *message.Message) (err error) {
 		//我们在这里先测试成功，然后再返回具体的错误信息
 	} else {
 		loginResMes.Code = 200
+		//由于用户已经登录成功，于是将该登录成功的用户放到UserManger中
+		//将登录成功的UserID赋值给pro
+		pro.UserID = loginMessage.UserID
+		userManager.AddOnlineUsers(pro)
+		//将当前用户的UserID放到loginResponceMessage.UserID
+		//遍历UserManager.OnlineUsers
+		for id, _ := range userManager.OnlineUsers {
+			loginResMes.UsersID = append(loginResMes.UsersID, id)
+		}
 		fmt.Println(user, "登录成功了")
 	}
 

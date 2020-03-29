@@ -61,28 +61,3 @@ func main() {
 	}
 
 }
-
-/*
-	//依据用户的输入，显示新的信息
-	if key == 1 {
-		//说明用户要登陆
-		fmt.Println("请输入用户的ID")
-		fmt.Scanf("%d\n", &userID)
-		fmt.Println("请输入您的用户密码：")
-		fmt.Scanf("%s\n", &userPwd)
-
-		//先把登录的函数，写到另外一个文件，比如login.go
-		//这里我们会重新调用
-		//login(userID, userPwd)
-		// if err != nil {
-		// 	fmt.Println("登陆失败")
-		// } else {
-		// 	fmt.Println("登陆成功")
-		// }
-
-		//因为使用了新的结构
-
-	} else if key == 2 {
-		fmt.Println("进行用户注册的逻辑")
-	}
-*/

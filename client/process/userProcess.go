@@ -161,6 +161,19 @@ func (pro *UserProcess) Login(userID int, userPwd string) (err error) {
 	err = json.Unmarshal([]byte(mes.MessageData), &loginResMes)
 	if loginResMes.Code == 200 {
 		fmt.Println("登录成功了")
+
+		//可以显示当前用户的在线列表,遍历loginResponceMessage.UserID
+		fmt.Println("当前用户的列表如下")
+		for _, value := range loginResMes.UsersID {
+			fmt.Println("用户ID:\t", value)
+			/*
+				//如果不显示自己在线可以执行以下代码
+				if value==userID{
+					continue
+				}
+			*/
+		}
+		fmt.Print("\n\n")
 		//这里我们还需要启动一个携程
 		//该协程保持与服务器的连接，如果服务器有数据，就推送给客户端
 		//则接收并显示在客户端的终端上面。
