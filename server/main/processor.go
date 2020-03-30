@@ -17,6 +17,8 @@ type Processor struct {
 // ServerProcessMessage 编写一个ServerProcessMessage
 //功能：依据客户端发送的消息种类，决定调用哪个函数处理
 func (pro *Processor) ServerProcessMessage(mes *message.Message) (err error) {
+	// //看看是否能接受到服务端的聊天信息
+	// fmt.Printf("%s\n", mes)
 	switch mes.MessageType {
 	case message.LoginMessageType:
 		//处理登录的逻辑

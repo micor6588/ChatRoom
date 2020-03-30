@@ -7,6 +7,7 @@ const (
 	RegisterMesssageType        = "RegisterMesssage"
 	RegisterResMessageType      = "RegisterResMessage"
 	NotifyUserStatusMessageType = "NotifyUserStatusMessage"
+	SmsMessageType              = "SmsMessage"
 )
 
 //这里我们定义几个用户在线的状态常量
@@ -52,4 +53,10 @@ type RegisterResMessage struct {
 type NotifyUserStatusMessage struct {
 	UserID     int `json:"userID"`     //用户id
 	UserStatus int `json:"userStatus"` //用户状态
+}
+
+// SmsMessage 增加一个处理消息发送的结构体
+type SmsMessage struct {
+	Content string `json:"content"` //消息内容
+	User           //匿名结构体，继承user.go的User结构体
 }

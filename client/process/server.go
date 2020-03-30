@@ -22,6 +22,10 @@ func ShowMenu() {
 	fmt.Println("-----------------4.退出系统-----------------")
 	fmt.Println("-----------------“请选择(1-4):”-----------------")
 	var key int
+	var content string
+	//因为聊天必须使用SmsProcess实例，因此将其定义在外部
+	smsProcess := &SmsProcess{}
+
 	fmt.Scanf("%d\n", &key)
 	switch key {
 	case 1:
@@ -29,6 +33,9 @@ func ShowMenu() {
 		ShowOnlineUsers()
 	case 2:
 		fmt.Println("--发送消息--")
+		fmt.Println("请输入您想对大家说的话")
+		fmt.Scanf("%s\n", &content)
+		smsProcess.SendGroupMessage(content)
 	case 3:
 		fmt.Println("--查看信息列表---")
 	case 4:
