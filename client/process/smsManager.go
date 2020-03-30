@@ -37,7 +37,7 @@ func OutPutPrivateMessage(mes *message.Message) { //mes一定是smsMessage
 		return
 	}
 	//显示信息
-	info := fmt.Sprintf("用户id:\t%d,对大家说:\t%s", smsMes.UserID, smsMes.Content)
+	info := fmt.Sprintf("用户id:\t%d,对您说:\t%s", smsMes.UserID, smsMes.Content)
 	fmt.Println(info)
 	fmt.Println()
 }

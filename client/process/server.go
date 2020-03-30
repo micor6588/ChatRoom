@@ -100,7 +100,7 @@ func ServerProcessMes(conn net.Conn) {
 			UpdataUserStatus(&notifyUserStatusMessage)
 		case message.SmsMessageType: //有人群发消息
 			OutPutGroupMessage(&mes)
-		case message.SmsPrivateMessageType: //
+		case message.SmsPrivateMessageType: //有人私聊
 			OutPutPrivateMessage(&mes)
 		default:
 			fmt.Println("服务器端返回了未知消息类型")
