@@ -6,6 +6,8 @@ package process
 
 import (
 	"ChatRoom/client/utils"
+	"ChatRoom/common/message"
+	"encoding/json"
 	"fmt"
 	"net"
 	"os"
@@ -24,6 +26,7 @@ func ShowMenu() {
 	switch key {
 	case 1:
 		fmt.Println("---显示用户在线用户列表----")
+		ShowOnlineUsers()
 	case 2:
 		fmt.Println("--发送消息--")
 	case 3:
@@ -51,6 +54,21 @@ func ServerProcessMes(conn net.Conn) {
 			return
 		}
 		//如果读取到消息，就要进行下一步的逻辑处理
+		switch mes.MessageType {
+		case message.NotifyUserStatusMessageType: //提示;有人已经上线
+			//1.取出用户的NotifyUserStatusMessage
+			var notifyUserStatusMessage message.NotifyUserStatusMessage
+			err = json.Unmarshal([]byte(mes.MessageData), &notifyUserStatusMessage)
+			if err != nil {
+				fmt.Println("notifyUserStatusMessage  json.Unmarshal err=", err)
+				return
+			}
+			//2.把该用户的信息和状态保持到客户端Map当中,Map格式：map[int]User.
+			UpdataUserStatus(&notifyUserStatusMessage)
+		default:
+			fmt.Println("服务器端返回了未知消息类型")
+
+		}
 		fmt.Printf("mes=%v\n", mes)
 	}
 }
