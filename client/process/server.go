@@ -72,6 +72,8 @@ func ServerProcessMes(conn net.Conn) {
 			}
 			//2.把该用户的信息和状态保持到客户端Map当中,Map格式：map[int]User.
 			UpdataUserStatus(&notifyUserStatusMessage)
+		case message.SmsMessageType: //有人群发消息
+			OutPutGroupMessage(&mes)
 		default:
 			fmt.Println("服务器端返回了未知消息类型")
 
